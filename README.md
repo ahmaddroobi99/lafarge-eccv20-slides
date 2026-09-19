@@ -1,262 +1,125 @@
-# Florent Lafarge — Data Structures for Piecewise-Planar Geometry
-
-Extracted frames and study notes from the ECCV 2020 invited talk.
-
-| | |
-|---|---|
-| **Watch** | [youtube.com/watch?v=2EL-0tDJtZk](https://www.youtube.com/watch?v=2EL-0tDJtZk) |
-| **Workshop** | [Holistic 3D @ ECCV 2020](https://holistic-3d.github.io/eccv20/) · 23 Aug 2020 · 13:30–14:00 UK |
-| **Speaker** | Prof. Florent Lafarge, Inria Titane / Université Côte d’Azur |
-| **Length** | 30 minutes |
-| **Paper behind the talk** | [Kinetic Shape Reconstruction, TOG 2020](https://hal.science/hal-02924409/) |
-
-Open this README in this folder. Every picture below is already on the page.
-
-These stills are a **study pack** from a public workshop recording. They are not a substitute for the talk or the paper. Watch the video for the actual slides.
-
----
-
-## Real frames from the video
-
-### 01 · From 3D measurements to concise polygon meshes
-
-**Headline:** The talk’s one-sentence goal.  
-Range images, laser scans, and multi-view stereo should become a few large planar facets — not a million-triangle soup.
-
-![Title goal](slides/01-title-goal.jpg)
-
-### 02 · Problem statement
-
-**Headline:** Point cloud in. Watertight polygonal mesh out.  
-Criteria on the slide: fidelity, simplicity, watertightness, efficiency.
-
-![Problem](slides/02-problem-statement.jpg)
-
-### 03 · Related work — reconstruct then simplify
-
-**Headline:** Foam-then-simplify is the default — and it fights itself.  
-Dense reconstruction keeps the noise. Simplification then destroys the planes you wanted.
-
-![Surface approximation](slides/03-related-surface-approx.jpg)
-
-### 04 · What is a good space-partitioning data structure?
-
-**Headline:** The partition has to stay meaningful on real objects.  
-Buildings, machines, interiors: too many cells and you lose the speedup; too few and you lose the shape.
-
-![Space partition](slides/04-space-partition.jpg)
-
-### 05 · Kinetic data structure
-
-**Headline:** Grow the detected planes. Do not slice every pair.  
-Planes expand at constant speed and stop when they collide. That is the whole data-structure idea.
-
-![Kinetic](slides/05-kinetic-structure.jpg)
-
-### 06 · Algorithm
-
-**Headline:** Initialize the structure, queue the events, pop collisions.  
-While the event queue is not empty: flip the colliding primitives and test the stopping condition.
-
-![Algorithm](slides/06-algorithm.jpg)
-
-### 07 · Comparisons with over-segmentation
-
-**Headline:** Fewer regions, higher boundary quality.  
-KIPPI-style 2D partitioning against classic over-segmentation. Same idea later lifts to 3D.
-
-![Comparisons](slides/07-comparisons.jpg)
-
-### 08 · Results on HNU-IS
-
-**Headline:** The 2D kinetic partition is already a labeling domain.  
-Image classes ride on polygons instead of pixels.
-
-![HNU results](slides/08-results-hnu.jpg)
-
-### 09 · Step 1: shape detection
-
-**Headline:** Detect the planes before you assemble anything.  
-Official YouTube preview frame. Colored planar primitives on a mechanical object.
-
-![Shape detection](slides/09-shape-detection.jpg)
-
-### 10 · Related work — kinetic growth
-
-**Headline:** Cubes growing until they collide is the 3D intuition.  
-This is the picture Lafarge uses to contrast exhaustive plane arrangements.
-
-![Kinetic cubes](slides/10-related-kinetic.jpg)
-
-### 11 · Satellite / city imagery
-
-**Headline:** The 2D method already runs at city scale.  
-Polygonal partitions on satellite photos — façades kept, cell count down.
-
-![Satellite](slides/11-satellite.jpg)
-
-### 12 · Paper teaser (TOG 2020)
-
-**Headline:** What the 3D method is for: buildings and rooms as planar solids.  
-Scan / photogrammetry on top. Concise piecewise-planar mesh underneath. Official HAL teaser.
-
-![Paper teaser](slides/12-paper-teaser.jpg)
-
----
-
-## Study slides (argument of the talk)
-
-These 16 cards reconstruct the argument when a projector slide was too small to read. They are notes, not OCR.
-
-### S01 · Title
-
-**Data structures for piecewise-planar geometry**  
-How physical measurements become simple planar models.
-
-![S01](01.png)
-
-### S02 · Workshop context
-
-**Why Holistic 3D asked for this talk**  
-The workshop wants planes and regularity, not triangle soup.
-
-![S02](02.png)
-
-### S03 · The reconstruction problem
-
-**Input: points. Output: large planar facets.**  
-Watertight, compact, and cheap to compute.
-
-![S03](03.png)
-
-### S04 · Why the usual pipeline fails
-
-**Reconstruct-then-simplify fights itself.**  
-Keep too many faces or lose the planes. Full arrangements do not scale.
-
-![S04](04.png)
-
-### S05 · The idea
-
-**Grow the planes instead of slicing all of them.**  
-Constant-speed expansion. Stop at collisions.
-
-![S05](05.png)
-
-### S06 · Kinetic data structures
-
-**Certificates and a collision queue (Guibas 2004).**  
-Time is events, not a fixed timestep.
-
-![S06](06.png)
-
-### S07 · KIPPI (CVPR 2018)
-
-**2D rehearsal: kinetic polygonal partitioning of images.**  
-Detect segments, grow them until they meet.
-
-![S07](07.png)
-
-### S08 · 2D uses
-
-**Polygons are a domain for labeling.**  
-Building footprints and object contours, not the final product.
-
-![S08](08.png)
-
-### S09 · 3D step 1
-
-**Detect planar shapes.**  
-Detection quality bounds everything that follows.
-
-![S09](09.png)
-
-### S10 · 3D step 2
-
-**Grow shapes until they collide.**  
-Missing data is filled because growth continues into empty space.
-
-![S10](10.png)
-
-### S11 · Events
-
-**Vertex–edge and vertex–face collisions.**  
-Sliding vertices are the expensive case.
-
-![S11](11.png)
-
-### S12 · 3D step 3
-
-**Extract a watertight mesh.**  
-Min-cut labels cells inside / outside. The cut is the surface.
-
-![S12](12.png)
-
-### S13 · Results
-
-**Buildings stay planar. Freeform shapes get a compact stand-in.**  
-Millions of points → hundreds to thousands of facets.
-
-![S13](13.png)
-
-### S14 · Efficiency
-
-**The data structure is the speedup.**  
-Most intersections never happen, so you can handle ~10× more shapes.
-
-![S14](14.png)
-
-### S15 · Applications
-
-**Airborne buildings, indoor rooms, later urban-mesh repair.**  
-A planar prior without starting from IFC.
-
-![S15](15.png)
-
-### S16 · Takeaway
-
-**Do not slice every plane.**  
-Grow what you detected, stop at collisions, cut a watertight surface out of the partition.
-
-![S16](16.png)
-
----
-
-## Full frame strip (every ~10 seconds)
-
-Real YouTube storyboard tiles, upscaled. Low resolution — use them as a timeline, not as slides.
-
-A complete set lives in `frames/`. Selected extras:
-
-![t3:25](frames/frame_020_03-25.jpg)
-![t4:17](frames/frame_025_04-17.jpg)
-![t6:00](frames/frame_035_06-00.jpg)
-![t6:51](frames/frame_040_06-51.jpg)
-![t8:34](frames/frame_050_08-34.jpg)
-![t9:25](frames/frame_055_09-25.jpg)
-![t11:08](frames/frame_065_11-08.jpg)
-![t12:00](frames/frame_070_12-00.jpg)
-![t12:51](frames/frame_075_12-51.jpg)
-![t14:34](frames/frame_085_14-34.jpg)
-![t15:25](frames/frame_090_15-25.jpg)
-
----
-
-## Papers
-
-| Paper | Venue | Link |
-|---|---|---|
-| KIPPI: Kinetic Polygonal Partitioning of Images | CVPR 2018 | [HAL](https://inria.hal.science/hal-01740958v1) |
-| Kinetic Shape Reconstruction | ACM TOG 2020 | [HAL](https://hal.science/hal-02924409/) · [DOI](https://doi.org/10.1145/3376918) |
-| Planar Shape Detection at Structural Scales | CVPR 2018 | Fang, Lafarge, Desbrun |
-| Repairing geometric errors in 3D urban models | ISPRS JPRS 2022 | Yu, Lafarge et al. |
-
-Author page: https://www-sop.inria.fr/members/Florent.Lafarge/
-
----
-
-## What was extracted vs reconstructed
-
-- **Real video frames:** YouTube storyboard tiles (~every 10 s) + official preview stills (`1.jpg` / `2.jpg` / `3.jpg`) + HAL teaser.
-- **Study cards 01–16:** notes of the argument. Not a verbatim dump of every projector slide.
-- Full MP4 could not be downloaded from this environment (YouTube 403 without a JS runtime). The storyboard + official stills are the frames YouTube itself publishes.
+# Lafarge ECCV20 Slides Frames
+
+This folder contains the frame sequence for the Lafarge ECCV20 slide deck. You can browse all images directly in this README without opening each file individually.
+
+## Browse all frames
+
+Click any thumbnail to open the full-size image.
+
+<div align="center">
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; align-items: center;">
+    <a href="frame_000_00-00.jpg"><img src="frame_000_00-00.jpg" alt="frame_000_00-00" width="120" /></a>
+    <a href="frame_001_00-10.jpg"><img src="frame_001_00-10.jpg" alt="frame_001_00-10" width="120" /></a>
+    <a href="frame_002_00-20.jpg"><img src="frame_002_00-20.jpg" alt="frame_002_00-20" width="120" /></a>
+    <a href="frame_003_00-30.jpg"><img src="frame_003_00-30.jpg" alt="frame_003_00-30" width="120" /></a>
+    <a href="frame_004_00-41.jpg"><img src="frame_004_00-41.jpg" alt="frame_004_00-41" width="120" /></a>
+    <a href="frame_005_00-51.jpg"><img src="frame_005_00-51.jpg" alt="frame_005_00-51" width="120" /></a>
+    <a href="frame_006_01-01.jpg"><img src="frame_006_01-01.jpg" alt="frame_006_01-01" width="120" /></a>
+    <a href="frame_007_01-12.jpg"><img src="frame_007_01-12.jpg" alt="frame_007_01-12" width="120" /></a>
+    <a href="frame_008_01-22.jpg"><img src="frame_008_01-22.jpg" alt="frame_008_01-22" width="120" /></a>
+    <a href="frame_009_01-32.jpg"><img src="frame_009_01-32.jpg" alt="frame_009_01-32" width="120" /></a>
+    <a href="frame_010_01-42.jpg"><img src="frame_010_01-42.jpg" alt="frame_010_01-42" width="120" /></a>
+    <a href="frame_011_01-53.jpg"><img src="frame_011_01-53.jpg" alt="frame_011_01-53" width="120" /></a>
+    <a href="frame_012_02-03.jpg"><img src="frame_012_02-03.jpg" alt="frame_012_02-03" width="120" /></a>
+    <a href="frame_013_02-13.jpg"><img src="frame_013_02-13.jpg" alt="frame_013_02-13" width="120" /></a>
+    <a href="frame_014_02-24.jpg"><img src="frame_014_02-24.jpg" alt="frame_014_02-24" width="120" /></a>
+    <a href="frame_015_02-34.jpg"><img src="frame_015_02-34.jpg" alt="frame_015_02-34" width="120" /></a>
+    <a href="frame_016_02-44.jpg"><img src="frame_016_02-44.jpg" alt="frame_016_02-44" width="120" /></a>
+    <a href="frame_017_02-54.jpg"><img src="frame_017_02-54.jpg" alt="frame_017_02-54" width="120" /></a>
+    <a href="frame_018_03-05.jpg"><img src="frame_018_03-05.jpg" alt="frame_018_03-05" width="120" /></a>
+    <a href="frame_019_03-15.jpg"><img src="frame_019_03-15.jpg" alt="frame_019_03-15" width="120" /></a>
+    <a href="frame_020_03-25.jpg"><img src="frame_020_03-25.jpg" alt="frame_020_03-25" width="120" /></a>
+    <a href="frame_021_03-36.jpg"><img src="frame_021_03-36.jpg" alt="frame_021_03-36" width="120" /></a>
+    <a href="frame_022_03-46.jpg"><img src="frame_022_03-46.jpg" alt="frame_022_03-46" width="120" /></a>
+    <a href="frame_023_03-56.jpg"><img src="frame_023_03-56.jpg" alt="frame_023_03-56" width="120" /></a>
+    <a href="frame_024_04-06.jpg"><img src="frame_024_04-06.jpg" alt="frame_024_04-06" width="120" /></a>
+    <a href="frame_025_04-17.jpg"><img src="frame_025_04-17.jpg" alt="frame_025_04-17" width="120" /></a>
+    <a href="frame_026_04-27.jpg"><img src="frame_026_04-27.jpg" alt="frame_026_04-27" width="120" /></a>
+    <a href="frame_027_04-37.jpg"><img src="frame_027_04-37.jpg" alt="frame_027_04-37" width="120" /></a>
+    <a href="frame_028_04-48.jpg"><img src="frame_028_04-48.jpg" alt="frame_028_04-48" width="120" /></a>
+    <a href="frame_029_04-58.jpg"><img src="frame_029_04-58.jpg" alt="frame_029_04-58" width="120" /></a>
+    <a href="frame_030_05-08.jpg"><img src="frame_030_05-08.jpg" alt="frame_030_05-08" width="120" /></a>
+    <a href="frame_031_05-18.jpg"><img src="frame_031_05-18.jpg" alt="frame_031_05-18" width="120" /></a>
+    <a href="frame_032_05-29.jpg"><img src="frame_032_05-29.jpg" alt="frame_032_05-29" width="120" /></a>
+    <a href="frame_033_05-39.jpg"><img src="frame_033_05-39.jpg" alt="frame_033_05-39" width="120" /></a>
+    <a href="frame_034_05-49.jpg"><img src="frame_034_05-49.jpg" alt="frame_034_05-49" width="120" /></a>
+    <a href="frame_035_06-00.jpg"><img src="frame_035_06-00.jpg" alt="frame_035_06-00" width="120" /></a>
+    <a href="frame_036_06-10.jpg"><img src="frame_036_06-10.jpg" alt="frame_036_06-10" width="120" /></a>
+    <a href="frame_037_06-20.jpg"><img src="frame_037_06-20.jpg" alt="frame_037_06-20" width="120" /></a>
+    <a href="frame_038_06-30.jpg"><img src="frame_038_06-30.jpg" alt="frame_038_06-30" width="120" /></a>
+    <a href="frame_039_06-41.jpg"><img src="frame_039_06-41.jpg" alt="frame_039_06-41" width="120" /></a>
+    <a href="frame_040_06-51.jpg"><img src="frame_040_06-51.jpg" alt="frame_040_06-51" width="120" /></a>
+    <a href="frame_041_07-01.jpg"><img src="frame_041_07-01.jpg" alt="frame_041_07-01" width="120" /></a>
+    <a href="frame_042_07-12.jpg"><img src="frame_042_07-12.jpg" alt="frame_042_07-12" width="120" /></a>
+    <a href="frame_043_07-22.jpg"><img src="frame_043_07-22.jpg" alt="frame_043_07-22" width="120" /></a>
+    <a href="frame_044_07-32.jpg"><img src="frame_044_07-32.jpg" alt="frame_044_07-32" width="120" /></a>
+    <a href="frame_045_07-42.jpg"><img src="frame_045_07-42.jpg" alt="frame_045_07-42" width="120" /></a>
+    <a href="frame_046_07-53.jpg"><img src="frame_046_07-53.jpg" alt="frame_046_07-53" width="120" /></a>
+    <a href="frame_047_08-03.jpg"><img src="frame_047_08-03.jpg" alt="frame_047_08-03" width="120" /></a>
+    <a href="frame_048_08-13.jpg"><img src="frame_048_08-13.jpg" alt="frame_048_08-13" width="120" /></a>
+    <a href="frame_049_08-24.jpg"><img src="frame_049_08-24.jpg" alt="frame_049_08-24" width="120" /></a>
+    <a href="frame_050_08-34.jpg"><img src="frame_050_08-34.jpg" alt="frame_050_08-34" width="120" /></a>
+    <a href="frame_051_08-44.jpg"><img src="frame_051_08-44.jpg" alt="frame_051_08-44" width="120" /></a>
+    <a href="frame_052_08-54.jpg"><img src="frame_052_08-54.jpg" alt="frame_052_08-54" width="120" /></a>
+    <a href="frame_053_09-05.jpg"><img src="frame_053_09-05.jpg" alt="frame_053_09-05" width="120" /></a>
+    <a href="frame_054_09-15.jpg"><img src="frame_054_09-15.jpg" alt="frame_054_09-15" width="120" /></a>
+    <a href="frame_055_09-25.jpg"><img src="frame_055_09-25.jpg" alt="frame_055_09-25" width="120" /></a>
+    <a href="frame_056_09-36.jpg"><img src="frame_056_09-36.jpg" alt="frame_056_09-36" width="120" /></a>
+    <a href="frame_057_09-46.jpg"><img src="frame_057_09-46.jpg" alt="frame_057_09-46" width="120" /></a>
+    <a href="frame_058_09-56.jpg"><img src="frame_058_09-56.jpg" alt="frame_058_09-56" width="120" /></a>
+    <a href="frame_059_10-06.jpg"><img src="frame_059_10-06.jpg" alt="frame_059_10-06" width="120" /></a>
+    <a href="frame_060_10-17.jpg"><img src="frame_060_10-17.jpg" alt="frame_060_10-17" width="120" /></a>
+    <a href="frame_061_10-27.jpg"><img src="frame_061_10-27.jpg" alt="frame_061_10-27" width="120" /></a>
+    <a href="frame_062_10-37.jpg"><img src="frame_062_10-37.jpg" alt="frame_062_10-37" width="120" /></a>
+    <a href="frame_063_10-48.jpg"><img src="frame_063_10-48.jpg" alt="frame_063_10-48" width="120" /></a>
+    <a href="frame_064_10-58.jpg"><img src="frame_064_10-58.jpg" alt="frame_064_10-58" width="120" /></a>
+    <a href="frame_065_11-08.jpg"><img src="frame_065_11-08.jpg" alt="frame_065_11-08" width="120" /></a>
+    <a href="frame_066_11-18.jpg"><img src="frame_066_11-18.jpg" alt="frame_066_11-18" width="120" /></a>
+    <a href="frame_067_11-29.jpg"><img src="frame_067_11-29.jpg" alt="frame_067_11-29" width="120" /></a>
+    <a href="frame_068_11-39.jpg"><img src="frame_068_11-39.jpg" alt="frame_068_11-39" width="120" /></a>
+    <a href="frame_069_11-49.jpg"><img src="frame_069_11-49.jpg" alt="frame_069_11-49" width="120" /></a>
+    <a href="frame_070_12-00.jpg"><img src="frame_070_12-00.jpg" alt="frame_070_12-00" width="120" /></a>
+    <a href="frame_071_12-10.jpg"><img src="frame_071_12-10.jpg" alt="frame_071_12-10" width="120" /></a>
+    <a href="frame_072_12-20.jpg"><img src="frame_072_12-20.jpg" alt="frame_072_12-20" width="120" /></a>
+    <a href="frame_073_12-30.jpg"><img src="frame_073_12-30.jpg" alt="frame_073_12-30" width="120" /></a>
+    <a href="frame_074_12-41.jpg"><img src="frame_074_12-41.jpg" alt="frame_074_12-41" width="120" /></a>
+    <a href="frame_075_12-51.jpg"><img src="frame_075_12-51.jpg" alt="frame_075_12-51" width="120" /></a>
+    <a href="frame_076_13-01.jpg"><img src="frame_076_13-01.jpg" alt="frame_076_13-01" width="120" /></a>
+    <a href="frame_077_13-12.jpg"><img src="frame_077_13-12.jpg" alt="frame_077_13-12" width="120" /></a>
+    <a href="frame_078_13-22.jpg"><img src="frame_078_13-22.jpg" alt="frame_078_13-22" width="120" /></a>
+    <a href="frame_079_13-32.jpg"><img src="frame_079_13-32.jpg" alt="frame_079_13-32" width="120" /></a>
+    <a href="frame_080_13-42.jpg"><img src="frame_080_13-42.jpg" alt="frame_080_13-42" width="120" /></a>
+    <a href="frame_081_13-53.jpg"><img src="frame_081_13-53.jpg" alt="frame_081_13-53" width="120" /></a>
+    <a href="frame_082_14-03.jpg"><img src="frame_082_14-03.jpg" alt="frame_082_14-03" width="120" /></a>
+    <a href="frame_083_14-13.jpg"><img src="frame_083_14-13.jpg" alt="frame_083_14-13" width="120" /></a>
+    <a href="frame_084_14-24.jpg"><img src="frame_084_14-24.jpg" alt="frame_084_14-24" width="120" /></a>
+    <a href="frame_085_14-34.jpg"><img src="frame_085_14-34.jpg" alt="frame_085_14-34" width="120" /></a>
+    <a href="frame_086_14-44.jpg"><img src="frame_086_14-44.jpg" alt="frame_086_14-44" width="120" /></a>
+    <a href="frame_087_14-54.jpg"><img src="frame_087_14-54.jpg" alt="frame_087_14-54" width="120" /></a>
+    <a href="frame_088_15-05.jpg"><img src="frame_088_15-05.jpg" alt="frame_088_15-05" width="120" /></a>
+    <a href="frame_089_15-15.jpg"><img src="frame_089_15-15.jpg" alt="frame_089_15-15" width="120" /></a>
+    <a href="frame_090_15-25.jpg"><img src="frame_090_15-25.jpg" alt="frame_090_15-25" width="120" /></a>
+    <a href="frame_091_15-36.jpg"><img src="frame_091_15-36.jpg" alt="frame_091_15-36" width="120" /></a>
+    <a href="frame_092_15-46.jpg"><img src="frame_092_15-46.jpg" alt="frame_092_15-46" width="120" /></a>
+    <a href="frame_093_15-56.jpg"><img src="frame_093_15-56.jpg" alt="frame_093_15-56" width="120" /></a>
+    <a href="frame_094_16-06.jpg"><img src="frame_094_16-06.jpg" alt="frame_094_16-06" width="120" /></a>
+    <a href="frame_095_16-17.jpg"><img src="frame_095_16-17.jpg" alt="frame_095_16-17" width="120" /></a>
+    <a href="frame_096_16-27.jpg"><img src="frame_096_16-27.jpg" alt="frame_096_16-27" width="120" /></a>
+    <a href="frame_097_16-37.jpg"><img src="frame_097_16-37.jpg" alt="frame_097_16-37" width="120" /></a>
+    <a href="frame_098_16-48.jpg"><img src="frame_098_16-48.jpg" alt="frame_098_16-48" width="120" /></a>
+    <a href="frame_099_16-58.jpg"><img src="frame_099_16-58.jpg" alt="frame_099_16-58" width="120" /></a>
+    <a href="frame_100_17-08.jpg"><img src="frame_100_17-08.jpg" alt="frame_100_17-08" width="120" /></a>
+    <a href="frame_101_17-18.jpg"><img src="frame_101_17-18.jpg" alt="frame_101_17-18" width="120" /></a>
+    <a href="frame_102_17-29.jpg"><img src="frame_102_17-29.jpg" alt="frame_102_17-29" width="120" /></a>
+    <a href="frame_103_17-39.jpg"><img src="frame_103_17-39.jpg" alt="frame_103_17-39" width="120" /></a>
+    <a href="frame_104_17-49.jpg"><img src="frame_104_17-49.jpg" alt="frame_104_17-49" width="120" /></a>
+    <a href="frame_105_18-00.jpg"><img src="frame_105_18-00.jpg" alt="frame_105_18-00" width="120" /></a>
+    <a href="frame_106_18-10.jpg"><img src="frame_106_18-10.jpg" alt="frame_106_18-10" width="120" /></a>
+  </div>
+</div>
+
+## Notes
+
+- The files are ordered by filename to match the sequence in the animation.
+- Open any thumbnail for a larger preview.
+- This gallery is intended to let you browse the whole set in one place without switching between files.
